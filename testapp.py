@@ -6,7 +6,7 @@ from PIL import Image
 url = "http://127.0.0.1:5000/predict" # Remplacez par l'adresse de votre API
 
 # Ouvrir et rogner l'image
-image1 = Image.open("../valid/images/IMG_0432_jpeg.rf.f20cc6a8dce6f9b55a5bdabbc2d58a28.jpg")
+image1 = Image.open("161_jpg.rf.9ec858154a9847cc7e54affb3f964bc6.jpg")
 image_rognee = image1.crop((20, 30, 50, 236))
 image_vide = Image.new("RGB", (10, 10)) # Créer une image vide
 
