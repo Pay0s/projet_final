@@ -1,34 +1,34 @@
-from flask import Flask
-from PIL import Image
-
-from ultralytics import YOLO
 import numpy as np
+from flask import Flask, request, jsonify
 from PIL import Image
-import requests
+import torch
 from io import BytesIO
-import cv2
-
-
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/predict', methods=['POST'])
 def image():
+    chemin_model = "./runs/train/exp4/weights/best.pt"
+    model = torch.hub.load('ultralytics/yolov5', 'custom', path=chemin_model, force_reload=True)
 
-    chemin_image = "../valid/images/IMG_0786_jpeg.rf.f355de46249dd1b66e53e120a9b260cb.jpg"
-    image = Image.open(chemin_image)
+    uploaded_file = request.files['file']
 
-    model = YOLO("yolov8n.pt")
-
-    response = requests.get("https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80")
-    image = Image.open(BytesIO(response.content))
+    if uploaded_file.filename == '':
+        return jsonify({"error": "Aucune image téléchargée."}), 400
+    
+    file_content = uploaded_file.read()
+    image = Image.open(BytesIO(file_content))
     image = np.asarray(image)
 
-    results = model.predict(image)
+    results = model(image)
 
-    text = str(results[0].boxes.boxes)
+    boxes = results.pred[0].numpy()  # Par exemple, pour obtenir les boîtes de détection de la première classe
 
-    return text
+    # Créez un dictionnaire Python contenant les résultats
+    response_data = {"boxes": boxes.tolist()}  # Utilisez tolist() pour convertir les tableaux numpy en listes Python
+
+    # Utilisez jsonify pour renvoyer une réponse JSON
+    return jsonify(response_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

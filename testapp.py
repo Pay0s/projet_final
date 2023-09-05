@@ -1,4 +1,5 @@
 import requests
+from flask import Flask, request
 from io import BytesIO
 from PIL import Image
 
