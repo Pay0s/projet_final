@@ -3,7 +3,7 @@ from flask import Flask, request
 from io import BytesIO
 from PIL import Image
 
-url = "http://127.0.0.1:5000/predict" # Remplacez par l'adresse de votre API
+url = "http://127.0.0.1:37759/predict" # Remplacez par l'adresse de votre API
 
 # Ouvrir et rogner l'image
 image1 = Image.open("elephant.jpg")
