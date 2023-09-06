@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def image():
-    chemin_model = "./runs/train/exp4/weights/best.pt"
+    chemin_model = "best.pt"
     model = torch.hub.load('ultralytics/yolov5', 'custom', path=chemin_model, force_reload=True)
 
     uploaded_file = request.files['file']
@@ -30,5 +30,5 @@ def image():
     # Utilisez jsonify pour renvoyer une réponse JSON
     return jsonify(response_data)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
